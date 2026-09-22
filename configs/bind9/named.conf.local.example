@@ -1,0 +1,8 @@
+//
+// Do any local configuration here
+//
+
+zone "intranet.lab" {
+    type master;
+    file "/etc/bind/db.intranet.lab";
+};

@@ -1,0 +1,7 @@
+# PostgreSQL client authentication example
+#
+# This is a sanitized example from the home lab.
+# It allows the Kali Linux lab machine to connect
+# to the labdb database using the labuser account.
+
+host    labdb    labuser    192.168.240.133/32    scram-sha-256
