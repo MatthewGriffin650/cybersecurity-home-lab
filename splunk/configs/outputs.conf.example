@@ -1,0 +1,11 @@
+# Splunk Universal Forwarder outputs (lab server)
+# Location on the server: /opt/splunkforwarder/etc/system/local/outputs.conf
+# Sends all collected logs to the Splunk server's receiving port.
+
+[tcpout]
+defaultGroup = default-autolb-group
+
+[tcpout:default-autolb-group]
+server = 192.168.240.134:9997
+
+[tcpout-server://192.168.240.134:9997]

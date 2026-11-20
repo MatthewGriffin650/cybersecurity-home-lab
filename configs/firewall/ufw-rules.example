@@ -1,0 +1,24 @@
+# UFW firewall configuration used in the home lab
+#
+# Default policies:
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+
+# Allow SSH administration from the Kali Linux lab VM only
+sudo ufw allow from 192.168.240.133 to any port 22 proto tcp
+
+# Allow HTTP for Nginx
+sudo ufw allow 'Nginx HTTP'
+
+# Allow DNS (TCP and UDP) for BIND9 from the Kali Linux lab VM only
+sudo ufw allow from 192.168.240.133 to any port 53
+
+# Allow PostgreSQL only from the Kali Linux lab VM
+sudo ufw allow from 192.168.240.133 to any port 5432 proto tcp
+
+# Enable the firewall
+sudo ufw enable
+
+# Verify configuration
+sudo ufw status verbose
+sudo ufw status numbered

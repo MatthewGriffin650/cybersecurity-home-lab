@@ -1,0 +1,91 @@
+<form version="1.1" theme="dark">
+  <label>Lab Security Overview</label>
+  <fieldset submitButton="false">
+    <input type="time" token="field1">
+      <label></label>
+      <default>
+        <earliest>-24h@h</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <title>Failed SSH Logins</title>
+      <table>
+        <search>
+          <query>index=lab source="/var/log/auth.log" "Failed password" | rex "Failed password for (invalid user )?(?&lt;user&gt;\S+) from (?&lt;src&gt;\S+)" | stats count by src, user | sort - count</query>
+          <earliest>$field1.earliest$</earliest>
+          <latest>$field1.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="count">20</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="percentagesRow">false</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Port Scan Detection</title>
+      <chart>
+        <search>
+          <query>index=lab sourcetype=ufw "UFW BLOCK" | rex "SRC=(?&lt;src&gt;\S+).*DPT=(?&lt;dpt&gt;\d+)" | stats dc(dpt) as ports_hit by src | sort - ports_hit</query>
+          <earliest>$field1.earliest$</earliest>
+          <latest>$field1.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="charting.chart">bar</option>
+        <option name="charting.drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Web Server Status Codes</title>
+      <chart>
+        <search>
+          <query>index=lab sourcetype=access_combined | stats count by status</query>
+          <earliest>$field1.earliest$</earliest>
+          <latest>$field1.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="charting.chart">pie</option>
+        <option name="charting.drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>PostgreSQL Login Failures</title>
+      <table>
+        <search>
+          <query>index=lab sourcetype=postgresql ("password authentication failed" OR "no pg_hba.conf entry")
+| rex "password authentication failed for user \"(?&lt;user&gt;[^\"]+)\""
+| rex "no pg_hba.conf entry for host \"(?&lt;client&gt;[^\"]+)\", user \"(?&lt;user2&gt;[^\"]+)\""
+| eval reason=if(like(_raw,"%password authentication failed%"),"Bad password","Blocked by pg_hba")
+| eval who=coalesce(user,user2)
+| stats count by reason, who</query>
+          <earliest>$field1.earliest$</earliest>
+          <latest>$field1.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="count">20</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="percentagesRow">false</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+  </row>
+</form>

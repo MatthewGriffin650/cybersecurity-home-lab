@@ -1,0 +1,22 @@
+options {
+        directory "/var/cache/bind";
+
+        // Forward unknown queries to a public resolver. The VMware NAT
+        // resolver does not pass DNSSEC records, so validation fails with it.
+        forwarders { 8.8.8.8; };
+        forward only;
+
+        // Listen only on loopback and the lab interface
+        listen-on { 127.0.0.1; 192.168.240.132; };
+        listen-on-v6 { none; };
+
+        // Only the server itself and the Kali VM may query or use recursion
+        allow-query { 127.0.0.1; 192.168.240.132; 192.168.240.133; };
+        allow-recursion { 127.0.0.1; 192.168.240.132; 192.168.240.133; };
+
+        // No zone transfers
+        allow-transfer { none; };
+
+        // Do not disclose the BIND version
+        version "not disclosed";
+};

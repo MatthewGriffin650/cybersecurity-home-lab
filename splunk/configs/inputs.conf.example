@@ -1,0 +1,28 @@
+# Splunk Universal Forwarder inputs (lab server)
+# Location on the server: /opt/splunkforwarder/etc/apps/search/local/inputs.conf
+# The splunkfwd account is in the adm group so it can read these logs.
+
+[monitor:///var/log/auth.log]
+disabled = false
+index = lab
+sourcetype = linux_secure
+
+[monitor:///var/log/nginx/access.log]
+disabled = false
+index = lab
+sourcetype = access_combined
+
+[monitor:///var/log/nginx/error.log]
+disabled = false
+index = lab
+sourcetype = nginx_error
+
+[monitor:///var/log/postgresql/postgresql-18-main.log]
+disabled = false
+index = lab
+sourcetype = postgresql
+
+[monitor:///var/log/ufw.log]
+disabled = false
+index = lab
+sourcetype = ufw

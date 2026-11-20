@@ -1,0 +1,15 @@
+# UFW rules on the Splunk VM
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+
+# SSH from the Kali VM only
+sudo ufw allow from 192.168.240.133 to any port 22 proto tcp
+
+# Splunk web UI from the Kali VM only
+sudo ufw allow from 192.168.240.133 to any port 8000 proto tcp
+
+# Forwarder traffic from the lab server only
+sudo ufw allow from 192.168.240.132 to any port 9997 proto tcp
+
+sudo ufw enable
+sudo ufw status numbered
